@@ -21,16 +21,13 @@ int main(){
 	char line[2048];
 	int id;
 	char action;
-	char page;
+	int page;
 
 	//create variables to store parsed data into
 	int id_arr[100];
 	char action_arr[100];
-	char page_arr[100];
-	for(int l = 0; l < 100; l++){
-		page_arr[l] = 0;
-	}
-
+	int page_arr[100];
+		
 	int i = 0; //counter for array
 	while(fgets(line, sizeof(line), fp) != NULL) //while fgets does not fail to scan a line
 	{
@@ -45,7 +42,7 @@ int main(){
 		action_arr[i] = action;
 		
 		if(action_arr[i] != 'C' && action_arr[i] != 'T'){ 
-			if(!(sscanf(line, "%d %c %c", &id, &action, &page) == 3) ){
+			if(!(sscanf(line, "%d %c %d", &id, &action, &page) == 3) ){
 				printf("Bad line detected\n");
 	 			exit(-1);
                		 }
@@ -60,9 +57,20 @@ int main(){
 
 	//Below are test prints to check if file is being properly parsed
 	for(int x = 0; x < i; x++){
-		printf("%d %c %c\n", id_arr[x], action_arr[x], page_arr[x]);
+		printf("%d %c %d\n", id_arr[x], action_arr[x], page_arr[x]);
         }
 	
+	struct page_content{
+		bool access = false;
+	       	bool dirty = false;
+		int process = 0;
+		int virtual_address = 0; 	
+	}pc;
+
+	struct page_content page_table[20]; 
+
+//FIFO Swap Policy
+		
 	fclose(fp); //close file
    	return 0;
 }
