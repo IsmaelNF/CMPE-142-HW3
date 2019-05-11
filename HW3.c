@@ -66,11 +66,44 @@ int main(){
 		int process = 0;
 		int virtual_address = 0; 	
 	}pc;
+	
+	int pt_size = 20;
+	struct page_content page_table[pt_size]; 
 
-	struct page_content page_table[20]; 
+//FIFO Swap Policy - Ismael will implement
+	for(int x = 0; x < i; x++){ //Overall loop for each line entry
+		bool pt_modified = true;
+		for(int a = 0; a < pt_size; a++){ //Check if there is an umodifired page in page table exist
+			if(page_table[a].dirty == false){
+				pt_modified = false; //page table has an unmodified page
+			}
+		}
+	
+		for(int a = 0; a < pt_size; a++){
+			if(pt_modified == false){ //if unmodified pages exist
+				if(page_table[ind].dirty == false){ //look for first page that is unmodified 
+					
 
-//FIFO Swap Policy
+
+					break;
+				}	
+			}
 		
+			else{ //if all pages are modified, use FIFO swap policy
+
+			}
+		}
+	}
+
+//Random Swap Policy - Andy will implement
+
+
+
+
+//LRU Swap Policy - 3rd teammate will implement
+
+
+
 	fclose(fp); //close file
    	return 0;
 }
