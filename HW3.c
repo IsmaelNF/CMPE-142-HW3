@@ -174,6 +174,9 @@ int main(){
 	}
 	for(int m = 0; m < pt_size; m++)
 	{
+		if(page_tableLRU[m].process != -1){
+			//
+		}
 		printf("%d ", page_tableLRU[m].process);
 	}
 	printf("\n");
@@ -186,6 +189,16 @@ int main(){
         {
                 printf("%d ", page_tableLRU[m].dirty);
         }
+
+	printf("\nPHYSICAL:\n");
+	for(int m = 0; m <pt_size; m++){
+		if(page_tableLRU[m].process != -1){
+			printf("%d\tProcess %d\n", m, page_tableLRU[m].process);
+		}
+		else{
+			printf("%d\tFree\n", m);
+		}
+	}
 	fclose(fp); //close file
    	return 0;
 }
