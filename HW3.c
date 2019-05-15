@@ -82,14 +82,14 @@ int main(){
 
 
 
-//FIFO Swap Policy - Ismael will implement
+//LRU Swap Policy - 3rd teammate will implement
 
 //Random Swap Policy - Andy will implement
 
 
 
 
-//LRU Swap Policy - 3rd teammate will implement
+//FIFO Swap Policy - LRU Variable used by mistake, but it is FIFO
 	struct page_content page_tableLRU[pt_size];
 	struct page_content swapLRU[100];
 
@@ -110,6 +110,8 @@ int main(){
 		swapLRU[y].process = -1;
 		swapLRU[y].virtual_address = -1;
 	}
+	
+	int find = 0;
 	for(int k = 0; k < i; k++)
 	{
 		for(int pageTableIndex = 0; pageTableIndex < pt_size; pageTableIndex++)
@@ -125,8 +127,32 @@ int main(){
 			}
 		}
 		if(action_arr[k] == 'C')
-		{
-			printf("");
+		{	if(fullLRU == false){
+				printf("");
+			}
+			else{
+				for(int si = 0; si < 100; si++){
+					if(swapLRU[si].process == -1){
+						swapLRU[si].process = page_tableLRU[find].process;
+						swapLRU[si].virtual_address = page_tableLRU[find].virtual_address;
+						swapLRU[si].dirty = page_tableLRU[find].dirty;
+						swapLRU[si].access = page_tableLRU[find].access;
+						
+						page_tableLRU[find].process = -1;
+						page_tableLRU[find].virtual_address = -1;
+						page_tableLRU[find].access = false;
+						page_tableLRU[find].dirty = false;
+						fullLRU = false;
+						if(find == 19){
+							find = 0;
+						}
+						else{
+							find++;
+						}
+						break;
+					}
+				}
+			}
 		}
 		else if(action_arr[k] == 'A' && fullLRU == false)
 		{
@@ -180,18 +206,13 @@ int main(){
 		}
 		//printf("%d ", page_tableLRU[m].process);
 	}
-	/*
-	printf("\n");
-	for(int m = 0; m < pt_size; m++)
-        {
-                printf("%d ", page_tableLRU[m].virtual_address);
-        }
-	printf("\n");
-	for(int m = 0; m < pt_size; m++)
-        {
-                printf("%d ", page_tableLRU[m].dirty);
-        }
-	*/
+	printf("\nFIFO Swap:\n");
+	for(int m = 0; m < 100; m++){
+		 if(swapLRU[m].process != -1){
+                        printf("Process: %d\t Virtual: %d\n", swapLRU[m].process, swapLRU[m].virtual_address);
+                }
+	}
+	
 	printf("\nPHYSICAL:\n");
 	for(int m = 0; m <pt_size; m++){
 		if(page_tableLRU[m].process != -1){
@@ -201,6 +222,20 @@ int main(){
 			printf("%d\tFree\n", m);
 		}
 	}
+
+	/*
+        printf("\n");
+        for(int m = 0; m < pt_size; m++)
+        {
+                printf("%d ", page_tableLRU[m].virtual_address);
+        }
+        printf("\n");
+        for(int m = 0; m < pt_size; m++)
+        {
+                printf("%d ", page_tableLRU[m].dirty);
+        }
+        */
+
 	fclose(fp); //close file
    	return 0;
 }
