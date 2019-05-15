@@ -2,9 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//int pt_isFull(struct page_content pt[], int size);
-bool in_array(int list[], int key);
-void append_array(int list[], int key);
 
 int main(){
 
@@ -81,138 +78,114 @@ int main(){
 		pt_fifo[pt_size].process = -1;
 		pt_fifo[pt_size].virtual_address = -1;
 	}
-	//int innn = pt_isFull(pt_fifo, pt_size);
 
-	//printf("%s", innn  ? "true" : "false");
+
+
 
 //FIFO Swap Policy - Ismael will implement
-	int created_list[150];
-	for(int x = 0; x < 150; x++){
-		created_list[x] = -1;
-	}
 
-	/* This is to test auxilary functions
-	append_array(created_list, 35);
-        append_array(created_list, 45);
-        append_array(created_list, 55);
-        for(int x = 0; x < 150; x++){
-               printf("%d",created_list[x]);
-        }
-
-	if(in_array(created_list, 35)){
-		printf("Yes it is\n");
-	} */
-
-	for(int x = 0; x < i; x ++){ //Overall loop for each line entry
-		if(action_arr[x] == "C"){ //Create action
-			if(!in_array(created_list, pt_fifo.process)){ //If process is not in created list, add to list
-				append_array(created_list, pt_fifo.process); //
-			else{ //do nothing
-				continue;
-			}
-		}
-		else if(action_arr[x] == "A"){ //Allocate action
-			if(in_array(created_list, pt_fifo.process)){ //if proccess has been created	
-				if(!pt_isFull(pt_fifo, pt_size)){ //if there is unmodified pages in the table
-					for(int q; q < pt_size; q++){
-						if(pt_fifo[q].virtual_address != -1 && pt_fifo[q].process != -1){ //Allocate the memory to empty page entry
-							pt_fifo[q].virtual_address = page_arr[x];
-							pt_fifo[q].process = id_arr[x];
-							break;
-						}
-					}
-				}
-
-				else{ //Do fifo swap policy
-
-				}
-			}
-			else{
-				//TODO: Kill 
-			}
-		}
-		else if(action_arr[x] == "R"){
-			if(in_array(created_list, pt_fifo.process)){
-				//Access  bool is true
-			}
-			else{
-				//TODO: Kill
-			}
-		}
-		else if(action_arr[x] == "W"){
-			if(in_array(created_list, pt_fifo.process)){
-				//Dirty bool is true
-			}
-			else{
-				//KILL
-			}
-		}
-		else if (action_arr[x] == "F"){ 
-			//Access bool is false
-		
-		}
-		else{ // Terminated action
-			//Clear spot in PT
-			//Clear spot in Created List
-		}
-	}
-	/*
-	for(int x = 0; x < i; x++){ //Overall loop for each line entry
-		if(action_arr[x] == "C" || action_arr[x] == "A" || action_arr[x] == "W"){ //If process is attempting to create
-			bool pt_modified = true;
-			for(int a = 0; a < pt_size; a++){ //Check if there is an umodifired page in page table exist
-				if(page_table[a].dirty == false){
-					pt_modified = false; //page table has an unmodified page
-				}
-			}
-	
-			for(int a = 0; a < pt_size; a++){
-				if(pt_modified == false){ //if unmodified pages exist
-					if(page_table[ind].dirty == false){ //look for first page that is unmodified 
-					
-
-
-						break;
-					}	
-				}
-		
-	*/
 //Random Swap Policy - Andy will implement
 
 
 
 
 //LRU Swap Policy - 3rd teammate will implement
+	struct page_content page_tableLRU[pt_size];
+	struct page_content swapLRU[100];
 
 
+	int createdArray[100];
+	bool fullLRU = false;
+	for(int k = 0; k < pt_size; k++)
+	{
+		page_tableLRU[k].access = false;
+		page_tableLRU[k].dirty = false;
+		page_tableLRU[k].process = -1;
+		page_tableLRU[k].virtual_address = -1;
+	}
+	for(int y = 0; y < 100; y++)
+	{
+		swapLRU[y].access = false;
+		swapLRU[y].dirty = false;
+		swapLRU[y].process = -1;
+		swapLRU[y].virtual_address = -1;
+	}
+	for(int k = 0; k < i; k++)
+	{
+		for(int pageTableIndex = 0; pageTableIndex < pt_size; pageTableIndex++)
+		{
+			if(page_tableLRU[pageTableIndex].process == -1)
+			{
+				fullLRU = false;
+				break;
+			}
+			else
+			{
+				fullLRU = true;
+			}
+		}
+		if(action_arr[k] == 'C')
+		{
+			printf("");
+		}
+		else if(action_arr[k] == 'A' && fullLRU == false)
+		{
+			for(int t = 0; t < pt_size; t++)
+			{
+				if(page_tableLRU[t].process == -1)
+				{
+					page_tableLRU[t].process = id_arr[k];
+					page_tableLRU[t].virtual_address = page_arr[k];
+					break;
+				}
+			}
+		}
+		else if(action_arr[k] == 'T')
+		{
+			for(int s = 0; s < pt_size; s++)
+			{
+				if(page_tableLRU[s].process == id_arr[k])
+				{
+					page_tableLRU[s].process = -1;
+				}
+			}
+		}
+		else if(action_arr[k] == 'W')
+		{
+			for(int r = 0; r < pt_size; r++)
+			{
+				if(page_tableLRU[r].process == id_arr[k] && page_tableLRU[r].virtual_address == page_arr[k])
+				{
+					page_tableLRU[r].dirty = true;
+				}
+			}
+		}
+		else if(action_arr[k] == 'R')
+                {
+                        for(int d = 0; d < pt_size; d++)
+                        {
+                                if(page_tableLRU[d].process == id_arr[k] && page_tableLRU[d].virtual_address == page_arr[k])
+                                {
+                                        page_tableLRU[d].access = true;
+                                }
+                        }
+                }
 
+	}
+	for(int m = 0; m < pt_size; m++)
+	{
+		printf("%d ", page_tableLRU[m].process);
+	}
+	printf("\n");
+	for(int m = 0; m < pt_size; m++)
+        {
+                printf("%d ", page_tableLRU[m].virtual_address);
+        }
+	printf("\n");
+	for(int m = 0; m < pt_size; m++)
+        {
+                printf("%d ", page_tableLRU[m].dirty);
+        }
 	fclose(fp); //close file
    	return 0;
 }
-
-bool in_array(int list[], int key){
-	for(int x = 0; x < 150; x++){
-		if(key == list[x]){
-			return true;
-		}
-	}
-	return false;
-}
-
-void append_array(int list[], int key){
-	for(int x = 0; x < 150; x++){
-		if(list[x] == -1){
-			list[x] = key;
-			break;
-		}
-	}
-}
-/*
-int pt_isFull(struct page_content pt[], int size){
-	for(int x = 0; x < size; x++){
-		if(pt[x].process == -1 && pt[x].virtual_address == -1){
-			return 0;
-		}
-	}
-	return 1;
-}*/
