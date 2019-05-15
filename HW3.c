@@ -175,10 +175,12 @@ int main(){
 	for(int m = 0; m < pt_size; m++)
 	{
 		if(page_tableLRU[m].process != -1){
-			//
+			printf("\nProcess: %d\n", page_tableLRU[m].process);
+			printf("Virtual: %d\t Physical: %d\n", page_tableLRU[m].virtual_address, m);
 		}
-		printf("%d ", page_tableLRU[m].process);
+		//printf("%d ", page_tableLRU[m].process);
 	}
+	/*
 	printf("\n");
 	for(int m = 0; m < pt_size; m++)
         {
@@ -189,7 +191,7 @@ int main(){
         {
                 printf("%d ", page_tableLRU[m].dirty);
         }
-
+	*/
 	printf("\nPHYSICAL:\n");
 	for(int m = 0; m <pt_size; m++){
 		if(page_tableLRU[m].process != -1){
